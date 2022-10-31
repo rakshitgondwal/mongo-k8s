@@ -32,5 +32,22 @@ spec:
                 name: mongodb-secret
                 key: password
           - name: ME_CONFIG_MONGODB_SERVER
-            value: ""
+            valueFrom:
+              configMapKeyRef:
+                name: mongo-configmap
+                key: database_url
               
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-service
+spec:
+  selector:
+    app: mongo-service
+  type: LoadBalancer
+  ports:
+  - port: 8081
+    targetPort: 8081
+    nodePort: 30000
